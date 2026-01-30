@@ -1,0 +1,52 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 128 128"
+  role="img"
+  aria-label="MediMind logo"
+>
+  <!-- Background -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#1E40AF" />
+    </linearGradient>
+  </defs>
+
+  <rect
+    x="0"
+    y="0"
+    width="128"
+    height="128"
+    rx="28"
+    fill="url(#bgGradient)"
+  />
+
+  <!-- Brain outline -->
+  <path
+    d="M44 44
+       C36 44 30 50 30 58
+       C30 66 36 72 44 72
+       C44 80 52 86 64 86
+       C76 86 84 80 84 72
+       C92 72 98 66 98 58
+       C98 50 92 44 84 44
+       C82 36 74 30 64 30
+       C54 30 46 36 44 44Z"
+    fill="#FFFFFF"
+    opacity="0.95"
+  />
+
+  <!-- Brain inner curve (AI feel) -->
+  <path
+    d="M64 38
+       C56 38 50 44 50 52
+       C50 60 56 66 64 66
+       C72 66 78 60 78 52
+       C78 44 72 38 64 38Z"
+    fill="#E0E7FF"
+  />
+
+  <!-- Medical cross -->
+  <rect x="60" y="48" width="8" height="28" rx="3" fill="#2563EB" />
+  <rect x="50" y="58" width="28" height="8" rx="3" fill="#2563EB" />
+</svg>

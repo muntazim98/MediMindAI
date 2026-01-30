@@ -1,70 +1,36 @@
-from flask import Flask, render_template, jsonify, request
-from src.helper import download_hugging_face_embeddings
-from langchain_pinecone import PineconeVectorStore
-from langchain_openai import ChatOpenAI
-from langchain.chains import create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain_core.prompts import ChatPromptTemplate
-from dotenv import load_dotenv
-from src.prompt import *
-import os
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
+from src.rag_service import MedicalRAGService
 
-app = Flask(__name__)
+app = FastAPI(title="Medical AI Assistant")
 
-
-load_dotenv()
-
-PINECONE_API_KEY=os.environ.get('PINECONE_API_KEY')
-OPENAI_API_KEY=os.environ.get('OPENAI_API_KEY')
-
-os.environ["PINECONE_API_KEY"] = PINECONE_API_KEY
-os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
-
-
-embeddings = download_hugging_face_embeddings()
-
-index_name = "medical-chatbot" 
-# Embed each chunk and upsert the embeddings into your Pinecone index.
-docsearch = PineconeVectorStore.from_existing_index(
-    index_name=index_name,
-    embedding=embeddings
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # tighten in prod
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
+rag_service = MedicalRAGService()
 
 
-
-retriever = docsearch.as_retriever(search_type="similarity", search_kwargs={"k":3})
-
-chatModel = ChatOpenAI(model="gpt-4o")
-prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", system_prompt),
-        ("human", "{input}"),
-    ]
-)
-
-question_answer_chain = create_stuff_documents_chain(chatModel, prompt)
-rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+class ChatRequest(BaseModel):
+    query: str
 
 
-
-@app.route("/")
-def index():
-    return render_template('chat.html')
+class ChatResponse(BaseModel):
+    answer: str
 
 
-
-@app.route("/get", methods=["GET", "POST"])
-def chat():
-    msg = request.form["msg"]
-    input = msg
-    print(input)
-    response = rag_chain.invoke({"input": msg})
-    print("Response : ", response["answer"])
-    return str(response["answer"])
+@app.get("/")
+def health():
+    return {"status": "Backend running"}
 
 
-
-if __name__ == '__main__':
-    app.run(host="0.0.0.0", port= 8080, debug= True)
+@app.post("/api/chat", response_model=ChatResponse)
+def chat(req: ChatRequest):
+    answer = rag_service.ask(req.query)
+    return {"answer": answer}
