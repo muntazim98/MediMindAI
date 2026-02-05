@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from src.rag_service import MedicalRAGService
 
-app = FastAPI(title="Medical AI Assistant")
+app = FastAPI(title="MediMind")
 
 app.add_middleware(
     CORSMiddleware,
