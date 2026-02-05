@@ -1,4 +1,4 @@
-# Build MediMindAi-a-Complete-Medical-Chatbot-with-LLMs-LangChain-Pinecone-Flask-AWS
+# Build MediMindAi-a-Complete-Medical-Chatbot-with-LLMs-LangChain-Pinecone-FastAPI-AWS
 
 # How to run?
 ### STEPS:
@@ -8,6 +8,7 @@ Clone the repository
 ```bash
 git clone https://github.com/muntazim98/MediMindAI.git
 ```
+### Run Backend Python with Embedding Store
 ### STEP 01- Create a conda environment after opening the repository
 
 ```bash
@@ -29,7 +30,7 @@ pip install -r requirements.txt
 
 ```ini
 PINECONE_API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-OPENAI_API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+GEMINI_API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
 
@@ -40,21 +41,29 @@ python store_index.py
 
 ```bash
 # Finally run the following command
-python app.py
+uvicorn app:app --host 0.0.0.0 --port 8000
 ```
 
 Now,
 ```bash
-open up localhost:
+open up localhost:8000/docs
 ```
+### Run FrontEnd ReactJS in new terminal
 
+
+# go to frontend directory
+cd frontend
+
+
+# start the frontend
+npm run dev
 
 ### Techstack Used:
 
 - Python
 - LangChain
-- Flask
-- GPT
+- FastAPI
+- Gemini
 - Pinecone
 
 
